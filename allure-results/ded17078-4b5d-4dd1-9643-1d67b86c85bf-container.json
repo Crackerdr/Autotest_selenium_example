@@ -1,0 +1,1 @@
+{"uuid":"ded17078-4b5d-4dd1-9643-1d67b86c85bf","name":"webPageTesting.WebDriverSetting.closeDriver","description":"","start":1594103426307,"stop":1594103426307,"children":["3adea7e2-e720-43c3-8a3b-393314f8d720"],"afters":[{"name":"closeDriver","status":"passed","stage":"finished","description":"","start":1594103426307,"stop":1594103426307}]}
