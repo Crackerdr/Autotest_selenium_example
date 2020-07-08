@@ -1,60 +1,60 @@
 package pageObject;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
 
 public class ZhkuPage {
-    private WebDriver driver;
-    private Actions builder;
+    private final WebDriver driver;
 
-    private By payZhku = By.xpath("//ul[@data-qa-file='Tabs']/child::li[2]/div");
-//            ("//div[@data-qa-file='Tabs']/ul/li[2]");
 
-    private By period = By.id("period");
+    private final By payZhku = By.xpath("//ul[@data-qa-file='Tabs']/child::li[2]/div");
 
-    private By payerCode = By.id("payerCode");
+    private final By period = By.id("period");
 
-    private By saveMoney = By.xpath("//span[contains(text(),\"страхования\")]/following::div[1]/input");
+    private final By payerCode = By.id("payerCode");
 
-    private By sumPay = By.xpath("//span[contains(text(),\"Сумма платежа\")]/following::div/input");
+    private final By saveMoney = By.xpath("//span[contains(text(),\"страхования\")]/following::div[1]/input");
 
-    private By payment = By.xpath("//a[.=\"Платежи\"]");
+    private final By sumPay = By.xpath("//span[contains(text(),\"Сумма платежа\")]/following::div/input");
 
-    private By titleOfPage = By.xpath("//h1[.=\"Оплатите ЖКУ в Москве без комиссии\"]");
+    private final By payment = By.xpath("//a[.=\"Платежи\"]");
 
-    private By titleOfPayerCode = By.xpath("//span[.=\"Код плательщика за ЖКУ в Москве\"]/span[1]");
+    private final By titleOfPage = By.xpath("//h1[.=\"Оплатите ЖКУ в Москве без комиссии\"]");
 
-    private By titleOfPeriod = By.xpath("//span[.=\"За какой период оплачиваете коммунальные услуги\"]/span[1]");
+    private final By titleOfPayerCode = By.xpath("//span[.=\"Код плательщика за ЖКУ в Москве\"]/span[1]");
 
-    private By titleOfSaveMoney = By.xpath("//span[contains(text(),\"Сумма добровольного страхования\")]");
+    private final By titleOfPeriod = By.xpath("//span[.=\"За какой период оплачиваете коммунальные услуги\"]/span[1]");
 
-    private By titleOfSumPay = By.xpath("//span[contains(text(),\"Сумма платежа,  от 1\")]");
+    private final By titleOfSaveMoney = By.xpath("//span[contains(text(),\"Сумма добровольного страхования\")]");
 
+    private final By titleOfSumPay = By.xpath("//span[contains(text(),\"Сумма платежа,  от 1\")]");
 
 
 
-    public ZhkuPage(WebDriver driver,Actions builder) {
+
+    public ZhkuPage(WebDriver driver) {
         this.driver = driver;
-        this.builder = builder;
     }
 
+    @Step("Фокусировка на layout")
     public void changeToPayZhku() {
-
         driver.findElement(By.xpath("//div[@data-qa-file='PlatformLayout']"));
         driver.findElement(payZhku).click();
 
     }
 
+    @Step("Заполнение кода плательщика")
     public void payerCodeFillIn(String number) {
         driver.findElement(payerCode).click();
         driver.findElement(payerCode).sendKeys(number);
         driver.findElement(By.xpath("//h2[@class='ui-button__ui-button__text_pw5ce']")).click();
     }
 
+    @Step("Заполнение периода оплачивания")
     public void periodFillIn (String number) {
         driver.findElement(period).click();
         driver.findElement(period).sendKeys(Keys.CONTROL+"a");
@@ -62,54 +62,61 @@ public class ZhkuPage {
         driver.findElement(period).sendKeys(number);
     }
 
+    @Step("Заполнение суммы добровольного страхования")
     public void saveMoneyFillIn(String number) {
         driver.findElement(saveMoney).click();
         driver.findElement(saveMoney).sendKeys(number);
     }
 
+    @Step("Заполнение суммы платежа")
     public void sumMoneyFillIn(String number) {
         driver.findElement(sumPay).click();
         driver.findElement(sumPay).sendKeys(number);
     }
 
+    @Step("Проверка наличие ошибки в коде плательщика")
     public void checkPayerError(String textError){
         WebElement error = driver.findElement(By.xpath("//div[.=\"Поле обязательное\"]"));
         Assert.assertEquals(error.getAttribute("innerText"),textError);
     }
 
+    @Step("Проверка наличие ошибки в периоде оплачивания")
     public void checkPeriodError(String textError){
         WebElement error = driver.findElement(By.xpath("//div[.=\"Поле заполнено некорректно\"]"));
         Assert.assertEquals(error.getAttribute("innerText"),textError);
     }
 
+    @Step("Проверка наличие ошибки в сумме добровольного страхования")
     public void checkSaveMoneyError(String textError){
         WebElement error = driver.findElement(By.xpath("//div[.=\"Поле заполнено неверно\"]"));
         Assert.assertEquals(error.getAttribute("innerText"),textError);
     }
 
-
-    public void checksumMoneyError(String textError){
+    @Step("Проверка наличие ошибки в сумме платежа")
+    public void checksumMoneyError(){
         WebElement error = driver.findElement(By.xpath("//div[contains(text(),\"Максимум\")]"));
-//        Assert.assertEquals(error.getAttribute("innerText"),textError);
         Assert.assertTrue(error.getAttribute("innerText").contains("Максимум — 15"));
 
     }
 
-    public void checkForError(String payerError, String periodError, String saveMoneyError, String sumMoneyError){
+    @Step("Проверка на наличие ошибок на странице оплаты жку")
+    public void checkForError(String payerError, String periodError, String saveMoneyError){
 
         checkPayerError(payerError);
         checkPeriodError(periodError);
         checkSaveMoneyError(saveMoneyError);
-        checksumMoneyError(sumMoneyError);
+        checksumMoneyError();
 
 
     }
 
-public void goToPayment() {
+    @Step("Переход на Оплатить ЖКУ в Москве tab")
+    public void goToPayment() {
         driver.findElement(payment).click();
 }
 
-public void checkValidOfPage(String title, String valPayer, String valPeriod){
+    @Step("Проверка на валидность страницы")
+    public void checkValidOfPage(String title, String valPayer, String valPeriod){
         WebElement titleEl = driver.findElement(titleOfPage);
         WebElement payerEl = driver.findElement(titleOfPayerCode);
         WebElement periodEl = driver.findElement(titleOfPeriod);
@@ -120,8 +127,6 @@ public void checkValidOfPage(String title, String valPayer, String valPeriod){
         Assert.assertEquals(periodEl.getAttribute("innerText"),valPeriod);
     Assert.assertTrue(saveMoneyEl.getAttribute("innerText").contains("Сумма добровольного страховани"));
     Assert.assertTrue(sumPayEl.getAttribute("innerText").contains("Сумма платежа"));
-
-
 }
 
 }
